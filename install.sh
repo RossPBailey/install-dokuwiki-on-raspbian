@@ -1,9 +1,9 @@
-#!/bin/sh
 
-#this is tested 2016-03-18-raspbian-jessie-lite.img
-#sudo apt-get update -y && sudo apt-get upgrade -y
-#sudo apt-get install git -y
-#git clone https://github.com/catonrug/install-dokuwiki-on-raspbian.git && cd install-dokuwiki-on-raspbian && chmod +x install.sh && ./install.sh
+	#this is tested 2016-03-18-raspbian-jessie-lite.img
+	#sudo apt-get update -y && sudo apt-get upgrade -y
+	#sudo apt-get install git -y
+	#git clone https://github.com/catonrug/install-dokuwiki-on-raspbian.git && cd install-dokuwiki-on-raspbian && chmod +x install.sh && ./install.sh
+      #Changed site to be default instead of yourdomain.com
 
 #update all repositories and install latest updates
 apt-get update -y && apt-get upgrade
@@ -21,13 +21,13 @@ wget http://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz -O dokuwiki.t
 tar -xvf dokuwiki.tgz
 
 #set up nginx  
-cat > /etc/nginx/sites-available/yourdomain.com << EOF
+cat > /etc/nginx/sites-available/default << EOF
 server {
-server_name yourdomain.com;
+server_name default;
 listen 80;
-root /var/www/yourdomain.com/;
-access_log /var/log/nginx/yourdomain.com-access.log;
-error_log /var/log/nginx/yourdomain.com-error.log;
+root /var/www/default/;
+access_log /var/log/nginx/default-access.log;
+error_log /var/log/nginx/default-error.log;
 
 index index.php index.html doku.php;
 location ~ /(data|conf|bin|inc)/ {
@@ -47,19 +47,19 @@ fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
 EOF
 
 #make symbolic limk
-ln -s /etc/nginx/sites-available/yourdomain.com /etc/nginx/sites-enabled/yourdomain.com
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 #restart nginx server
 /etc/init.d/nginx restart
 
 #make direcotry
-mkdir -p /var/www/yourdomain.com
+mkdir -p /var/www/default
 
 #move to extracted content
 cd ~/dokuwiki-*
 
 #copy all content to your domain directory
-cp -a . /var/www/yourdomain.com
+cp -a . /var/www/default
 
 #let nginx operate with this content
-chown -R www-data:www-data /var/www/yourdomain.com
+chown -R www-data:www-data /var/www/default
